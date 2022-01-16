@@ -5,7 +5,6 @@
 
   ==============================================================================
 */
-
 #include <JuceHeader.h>
 #define JUCE_APP_CONFIG_HEADER EmpressReverb.h
 #include "EmpressReverb.h"
@@ -17,7 +16,7 @@ public:
     Application() = default;
 
     const juce::String getApplicationName() override       { return "EmpressReverb"; }
-    const juce::String getApplicationVersion() override    { return "1.0.0"; }
+    const juce::String getApplicationVersion() override    { return "1.0.1"; }
 
     void initialise (const juce::String&) override
     {

@@ -87,6 +87,7 @@ public:
     bool isPedalOn();
     Point<int> getBackgroundReferencePosition();
     Preset getCurrentPreset();
+    Image const& getPresetLight(size_t index);
     void setNewPreset(Preset newPreset);
 
 private:
@@ -227,6 +228,16 @@ private:
 
     CriticalSection midiMonitorLock;
     Array<MidiMessage> incomingMessages;
+
+    const std::vector<Image> presetLights = std::vector<Image>{
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET1)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET2)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET3)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET4)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET5)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET6)),
+        ImageFileFormat::loadFrom(File(IMAGE_PRESET7))
+    };
 
     bool PedalOn = false;
     Image imagePedal, bypassLight;

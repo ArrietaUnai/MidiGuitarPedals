@@ -17,9 +17,8 @@ public:
 
 
 private:
-    ButtonCallback onPressed = nullptr, onReleased = nullptr;
-
-    ControlChange CC = ControlChange::DEFAULT;
     String name;
+    ButtonCallback onPressed = nullptr, onReleased = nullptr;
+    ControlChange CC = ControlChange::DEFAULT;
     ButtonState prevState = ButtonState::buttonNormal;
 };

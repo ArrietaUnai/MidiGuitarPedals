@@ -51,7 +51,8 @@ struct Preset
 {
     Preset() = default;
     Preset(int _presetNumber, int _knobDecay, int _knobMix, int _knobOutput, int _knobLow, int _knobHigh, int _knobTh1, int _knobTh2, char _modeNumber)
-        : presetNumber(_presetNumber), knobDecay(_knobDecay), knobMix(_knobMix), knobOutput(_knobOutput), knobLow(_knobLow), knobHigh(_knobHigh), knobTh1(_knobTh1), knobTh2(_knobTh2), modeNumber(_modeNumber) {}
+        : presetNumber(_presetNumber), knobDecay(_knobDecay), knobMix(_knobMix), knobOutput(_knobOutput), knobLow(_knobLow), knobHigh(_knobHigh), knobTh1(_knobTh1), knobTh2(_knobTh2), modeNumber(_modeNumber), edited(false) {}
+    int presetNumber = 0;
     int knobDecay = 0, //Will be stored if in the future we want to store presets in host pc
         knobMix = 0,
         knobOutput = 0,
@@ -60,7 +61,6 @@ struct Preset
         knobTh1 = 0,
         knobTh2 = 0;
     char modeNumber = 0;
-    int presetNumber = 0;
     bool edited = false;
 };
 

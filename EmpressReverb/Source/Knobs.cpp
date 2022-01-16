@@ -34,7 +34,7 @@ void ModeKnob::paint(Graphics& g) {
     auto modeNumber = getIndexInVector<Colour>(coloursIndex, Modes[(size_t)getValue()].color);
     if (modeNumber < 0)
         return;
-    g.drawImageAt(ModeColorImages[modeNumber], Modes[(int)getValue()].modeLightPos.getX() - 8, Modes[(int)getValue()].modeLightPos.getY() - 8);
+    g.drawImageAt(ModeColorImages[modeNumber], Modes[static_cast<int>(getValue())].modeLightPos.getX() - 8, Modes[static_cast<int>(getValue())].modeLightPos.getY() - 8);
 }
 
 void ModeKnob::valueChanged()
@@ -42,7 +42,7 @@ void ModeKnob::valueChanged()
     updateColors();
     updateLabels();
     if (notifyValueChanged)
-        notifyValueChanged("Mode", CC, Modes[(int)getValue()].CC);
+        notifyValueChanged("Mode", CC, Modes[static_cast<int>(getValue())].CC);
 }
 
 void ModeKnob::setStyle()

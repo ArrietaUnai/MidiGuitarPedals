@@ -5,6 +5,11 @@ void State::setState(EmpressReverb& machine, std::shared_ptr<State> newState)
     machine.state = newState;
 }
 
+size_t getLightColorIndex(int presetNumber)
+{
+    return static_cast<size_t>(std::min<int>(0,presetNumber / 5));
+}
+
 NormalState::NormalState(EmpressReverb& _e)
     :e(_e)
 {
@@ -69,16 +74,6 @@ PresetBrowseState::PresetBrowseState(EmpressReverb& _e)
 {
     browsingPreset = e.getCurrentPreset();
     nextPreset();
-
-    presetLights = std::vector<Image>{
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET1)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET2)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET3)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET4)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET5)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET6)),
-        ImageFileFormat::loadFrom(File(IMAGE_PRESET7)),
-    };
     
     presetLightsTimer.starLightstTimer(250);
     presetTimeoutTimer.starLightstTimer(5000);
@@ -134,7 +129,7 @@ void PresetBrowseState::onSelectPressed()
     e.setNewPreset(browsingPreset);
     presetLightsOn = true;
     e.repaint();
-    setState(e, std::make_shared<PresetSelectState>(e, presetLights));
+    setState(e, std::make_shared<PresetSelectState>(e));
 }
 
 void PresetBrowseState::onSelectReleased()
@@ -147,17 +142,17 @@ void PresetBrowseState::onKnobsEdited()
     e.repaint();
     browsingPreset.edited = true;
     e.setNewPreset(browsingPreset);
-    setState(e, std::make_shared<PresetEditedState>(e, presetLights));
+    setState(e, std::make_shared<PresetEditedState>(e));
 }
 
 void PresetBrowseState::paint(Graphics& g)
 {
     if (presetLightsOn)
     {
-        int lightColorIndex = browsingPreset.presetNumber / 5;
-        for (size_t i = 0; i <= browsingPreset.presetNumber % 5; i++)
+        auto lightColorIndex = getLightColorIndex(browsingPreset.presetNumber);
+        for (size_t i = 0; i <= static_cast<size_t>(browsingPreset.presetNumber % 5); i++)
         {
-            g.drawImageAt(presetLights[lightColorIndex], PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
+            g.drawImageAt(e.getPresetLight(lightColorIndex), PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
         }
     }
 }
@@ -179,9 +174,9 @@ void PresetBrowseState::presetTimeoutTimerCallback()
         presetLightsOn = true;
         e.repaint();
         if (e.getCurrentPreset().edited)
-            setState(e, std::make_shared<PresetEditedState>(e, presetLights));
+            setState(e, std::make_shared<PresetEditedState>(e));
         else
-            setState(e, std::make_shared<PresetSelectState>(e, presetLights));
+            setState(e, std::make_shared<PresetSelectState>(e));
     }
 }
 
@@ -196,15 +191,9 @@ void PresetBrowseState::nextPreset()
 
 
 
-PresetEditedState::PresetEditedState(EmpressReverb& _e, std::vector<Image> images)
+PresetEditedState::PresetEditedState(EmpressReverb& _e)
     :e(_e)
 {
-    for (auto image : images)
-    {
-        auto imageCopy = image.createCopy();
-        imageCopy.multiplyAllAlphas(0.6);
-        presetLights.push_back(imageCopy);
-    }
 }
 
 void PresetEditedState::onBypassPressed()
@@ -254,18 +243,19 @@ void PresetEditedState::onKnobsEdited()
 
 void PresetEditedState::paint(Graphics& g)
 {
-    size_t lightColorIndex = e.getCurrentPreset().presetNumber / 5;
-    for (size_t i = 0; i <= e.getCurrentPreset().presetNumber % 5; i++)
+    auto lightColorIndex = getLightColorIndex(e.getCurrentPreset().presetNumber);
+    auto position = static_cast<size_t>(e.getCurrentPreset().presetNumber % 5);
+    for (size_t i = 0; i <= position; i++)
     {
-        g.drawImageAt(presetLights[lightColorIndex], PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
+        g.drawImageAt(e.getPresetLight(lightColorIndex), PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
     }
 }
 
 
 
 
-PresetSelectState::PresetSelectState(EmpressReverb& _e, std::vector<Image> images)
-    :e(_e), presetLights(images)
+PresetSelectState::PresetSelectState(EmpressReverb& _e)
+    :e(_e)
 {
     auto preset = e.getCurrentPreset();
     preset.edited = false;
@@ -319,17 +309,18 @@ void PresetSelectState::onKnobsEdited()
     preset.edited = true;
     e.setNewPreset(preset);
     e.repaint();
-    setState(e, std::make_shared<PresetEditedState>(e, presetLights));
+    setState(e, std::make_shared<PresetEditedState>(e));
 }
 
 void PresetSelectState::paint(Graphics& g)
 {
     if (e.getCurrentPreset().edited == false)
     {
-        size_t lightColorIndex = e.getCurrentPreset().presetNumber / 5;
-        for (size_t i = 0; i <= e.getCurrentPreset().presetNumber % 5; i++)
+        auto lightColorIndex = getLightColorIndex(e.getCurrentPreset().presetNumber);
+        auto position = static_cast<size_t>(e.getCurrentPreset().presetNumber % 5);
+        for (size_t i = 0; i <= position; i++)
         {
-            g.drawImageAt(presetLights[lightColorIndex], PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
+            g.drawImageAt(e.getPresetLight(lightColorIndex), PresetLightPositions[i].x, e.getHeight() - e.getBackgroundReferencePosition().y + PresetLightPositions[i].y);
         }
     }
 }

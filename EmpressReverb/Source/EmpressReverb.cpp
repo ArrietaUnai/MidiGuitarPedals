@@ -195,6 +195,11 @@ Preset EmpressReverb::getCurrentPreset()
 	return preset;
 }
 
+Image const& EmpressReverb::getPresetLight(size_t index)
+{
+    return presetLights.at(index);
+}
+
 void EmpressReverb::setNewPreset(Preset newPreset)
 {
     preset = newPreset;

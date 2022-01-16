@@ -71,7 +71,6 @@ private:
     EmpressReverb& e;
     bool presetLightsOn = false;
     Preset browsingPreset;
-    std::vector<Image> presetLights;
     LightsTimer presetLightsTimer{ std::bind(&PresetBrowseState::presetLightsTimerCallback, this) },
                 presetTimeoutTimer{ std::bind(&PresetBrowseState::presetTimeoutTimerCallback, this) };
 };
@@ -79,7 +78,7 @@ private:
 class PresetEditedState : public State
 {
 public:
-    PresetEditedState(EmpressReverb& _e, std::vector<Image> images);
+    PresetEditedState(EmpressReverb& _e);
     ~PresetEditedState() {}
     void onBypassPressed();
     void onBypassReleased();
@@ -93,13 +92,12 @@ public:
     void paint(Graphics& g);
 private:
     EmpressReverb& e;
-    std::vector<Image> presetLights;
 };
 
 class PresetSelectState : public State
 {
 public:
-    PresetSelectState(EmpressReverb& _e, std::vector<Image> images);
+    PresetSelectState(EmpressReverb& _e);
     ~PresetSelectState() {}
     void onBypassPressed();
     void onBypassReleased();
@@ -113,5 +111,4 @@ public:
     void paint(Graphics& g);
 private:
     EmpressReverb& e;
-    std::vector<Image> presetLights;
 };
